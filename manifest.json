@@ -1,0 +1,36 @@
+{
+
+  "manifest_version": 2,
+  "name": "Container Opener",
+  "version": "1.0",
+  "description": "Opens same site in multiple containers at once",
+	
+  "icons": {
+     "48": "icons/mushroom.svg"
+	 },	
+	 
+  "permissions": [  
+        "tabs",
+	    "cookies",
+	    "contextualIdentities",
+		"storage"
+    ],
+	
+  "browser_action": {
+     "default_icon": "icons/mushroom.svg",
+     "default_title": "Container Opener",
+	 "default_popup": "popup/siteList.html",
+	 "browser_style": true
+   },
+   
+   "options_ui": {
+      "page": "options/settings.html"
+    },
+	
+    "applications": {
+      "gecko": {
+        "id": "containerOpener@doorpop.com"
+      }
+    }
+
+}
