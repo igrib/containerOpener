@@ -152,8 +152,6 @@ function generateTable(siteList, contexts) {
 	***********************************************************************/
 	
 
-	
-
 	let table = document.getElementsByClassName("siteTable")[0]; //Select the table
 	let headerRow = table.insertRow(0); //Create a header row
 
@@ -218,12 +216,18 @@ function generateTable(siteList, contexts) {
 			row.appendChild(urlCell);
 
 			//Iterate over the context we have saved for the site and check off the box
+			
 			for (let columnCounter = 1; columnCounter < table.rows[0].cells.length; columnCounter++) {
 				//Create markers if the respective container is selected
 				let checkedCell = document.createElement("td");
 				checkedCell.className = "selectBoxCell"
+				checkedCell.setAttribute("value", table.rows[0].cells[columnCounter].innerHTML);
+
+
 				for (let context of siteList[item]) {
+					
 					//If the name of the column header matches the saved context for the site lets market it with a "*"
+					
 					if (table.rows[0].cells[columnCounter].innerHTML === context) {
 						checkedCell.innerHTML = "*";
 					} else if (checkedCell.innerHTML === "*") {
@@ -233,7 +237,25 @@ function generateTable(siteList, contexts) {
 					}
 				}
 				row.appendChild(checkedCell);
-			}
+			}//for loop
+			//Create cell for the edit button
+			let editCell = document.createElement("td");
+			editCell.className = "deleteCell";
+			editCell.id = urlCell.innerHTML; //Set ID to URL name it used for editing row
+			var img = document.createElement("img");
+			img.id = urlCell.innerHTML; //Set ID to URL name it is used for editing row
+			img.src = "../icons/container-edit.svg";
+
+			editCell.appendChild(img);
+			row.appendChild(editCell);
+
+			//Attach click handlers to the image and cell
+			editCell.addEventListener("click", function(e) {
+				editRow(e)
+			});
+			img.addEventListener("click", function(e) {
+				editRow(e)
+			});
 
 			//Create cell for the delete button
 			let deleteCell = document.createElement("td");
@@ -253,8 +275,9 @@ function generateTable(siteList, contexts) {
 			img.addEventListener("click", function(e) {
 				deleteRow(e)
 			});
-		}
-	}
+			
+		}//for loop
+	}//fillSavedTableValues()
 
 }
 
@@ -276,6 +299,99 @@ function clearTable() {
 	}
 	table.innerHTML = "";
 
+}
+
+function editRow(e)
+{
+	/***********************************************************************
+	Called when a user clicks on the edit button
+	Changes the row to input fields
+	************************************************************************/
+	
+	console.log("Called edit row");
+	let siteName = e.target.id;
+	
+
+	//Select table
+	var table = document.getElementsByClassName("siteTable")[0];
+	//console.log(table);
+
+	//Iterate over every row in the table
+	for(let row of table.rows)
+	{
+		//console.log(row);
+		//for(let cell of row.cells)
+		//{
+			//Check if the first cell in the row is equal to our target URL
+			if(row.cells[0].innerHTML === e.target.id)
+			{
+				
+				// console.log("Found " + document.getElementsByClassName("siteURLInput").length + " elements with this class name");
+//
+				
+				//Set the value of the input URL box to the url we want to edit
+				document.getElementsByClassName("siteURLInput")[0].value=row.cells[0].innerHTML;
+
+				//Go through all the cells in the row now
+				for(let cell of row.cells)
+				{
+					//console.log(cell.getAttribute("class"));
+					let currentCellClass = cell.getAttribute("class"); 
+					if(currentCellClass === "selectBoxCell") //Means we are looking the marked cells for context
+					{
+						console.log(cell.innerHTML);
+						let cellContext = cell.getAttribute("value");
+						console.log(cellContext);
+						
+						
+						if(cell.innerHTML==="*")
+						{
+							for(let checkBox of document.getElementsByClassName("selectBox"))
+								if(checkBox.getAttribute("value") === cellContext)
+								{
+									checkBox.checked=true;
+								}
+							
+						}
+					}
+					//if(cell.className=)
+				}
+				// //Found our row to edit
+			// 	let cell = row.cells[0];
+			// 	console.log(cell);
+			//
+			//
+			// 	//Convert the Site Name cell of the row to an input
+			// 	let inputCell = document.createElement("input");
+			// 	inputCell.setAttribute("value", cell.innerHTML);
+			//
+			// 	inputCell.className = "siteURLInput";
+			// 	cell.replaceChild(inputCell,cell.firstChild);
+			//
+			// 	// //Convert the checked off list to check boxes
+			// 	for (let cell of row) {
+			// 		//Insert checkboxes into each row to make a grid
+			// 		let checkbox = document.createElement("input");
+			// 		checkbox.type = "checkbox";
+			// 		checkbox.className = "selectBox";
+			// 		checkbox.value = context.name;
+			//
+			// 		//Check if it's already selected
+			// 		if(cell.)
+			// 		checkbox.checked
+			//
+			// 		let cell = inputRow.insertCell(-1);
+			// 		cell.className = "selectBoxCell";
+			// 		cell.appendChild(checkbox);
+			//
+			// 		break;
+			// 	}
+				
+				
+				
+				//}
+		}
+	}
 }
 
 function deleteRow(e) {

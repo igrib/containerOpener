@@ -74,13 +74,12 @@ function openSite(siteName) {
 	for (let context of window.siteList[siteName]) {
 		if (validateURL(siteName))
 		{
-	
 			let creating = browser.tabs.create({
 				url: siteName, //Needs to be a full domain
 				cookieStoreId: window.knownContexts[context]
 			});
 			
-			creating.then(onCreated, onError);
+			//creating.then(onCreated, onError);
 		}
 		else
 		{
