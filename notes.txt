@@ -1,0 +1,3 @@
+Zip instructions:
+zip -r containerOpener.zip . -x "*.DS_Store*" -x notes.txt -x "*.git*"
+

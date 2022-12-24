@@ -8,7 +8,7 @@ function load() {
 	************************************************************************/
 
 	getSavedSiteList();
-	browser.contextualIdentities.query({}).then(onGot, onError);
+	browser.contextualIdentities.query({}).then(onGotContexts, onError);
 	listenForClicks();
 }
 
@@ -19,11 +19,18 @@ function generateSiteList(siteList) {
 	************************************************************************/
 	
 	let list = document.getElementsByClassName("siteList")[0]; //Select 
-
-	for (let site in siteList) {
+	for (let key in siteList) {
 		let div = document.createElement("div");
 		div.className = "siteItem";
-		div.innerHTML = site;
+
+		if (typeof siteList[key].displayName == 'undefined' || siteList[key].displayName == "")
+		{
+			div.innerHTML = siteList[key].url;
+		}
+		else{
+			div.innerHTML=siteList[key].displayName;
+		}
+		div.id = key;
 		list.appendChild(div);
 	}
 }
@@ -42,8 +49,8 @@ function getSavedSiteList() {
 		for (let site in result) {
 			window.siteList[site] = result[site];
 		}
+		
 		generateSiteList(window.siteList);
-
 	}
 
 	function onError(error) {
@@ -58,7 +65,7 @@ function onError(error) {
 	console.log(`Error: ${error}`);
 }
 
-function onGot(contexts) {
+function onGotContexts(contexts) {
 	window.knownContexts = {};
 	for (let context of contexts) {
 		window.knownContexts[context.name] = context.cookieStoreId;
@@ -66,21 +73,22 @@ function onGot(contexts) {
 }
 
 
-function openSite(siteName) {
+function openSite(key) {
 	/***********************************************************************
 	Called when user clicks on site name
 	************************************************************************/
 	
-	for (let context of window.siteList[siteName]) {
-		if (validateURL(siteName))
-		{
+	//Iterate overall the specified containers and open one in a tab
 	
+	for (let context of siteList[key].containers) {
+		if (validateURL(siteList[key].url))
+		{
 			let creating = browser.tabs.create({
-				url: siteName, //Needs to be a full domain
+				url: siteList[key].url, //Needs to be a full domain
 				cookieStoreId: window.knownContexts[context]
 			});
 			
-			creating.then(onCreated, onError);
+			//creating.then(onCreated, onError);
 		}
 		else
 		{
@@ -95,15 +103,50 @@ function listenForClicks() {
 		 * Clicking on one of the div (site names/urls) will open it up the tabs
 		 */
 		if (e.target.classList.contains("siteItem")) {
-			let siteName = e.target.innerHTML;
-			openSite(siteName);
+			let key = e.target.id;
+			
+			console.log("listenForClicks - target:",e.target)
+			console.log("listenForClicks - key:",key)
+			openSite(key);
 		}
 		if (e.target.classList.contains("editButton"))
 		{
 			browser.runtime.openOptionsPage();
 		}
+		if (e.target.classList.contains("openButton"))
+		{
+			openCurrentUrl();
+		}
 
 	});
+}
+function openCurrentUrl()
+{
+	/***********************************************************************
+	Called when user clicks on open current site in all containers
+	************************************************************************/
+	var currentURL;
+	//Iterate overall the specified containers and open one in a tab
+	browser.tabs.query({currentWindow: true, active: true}).then(
+		function(tabs)
+		{
+			currentURL=tabs[0].url;
+	    	for (let context in window.knownContexts) 
+			{
+				if (validateURL(currentURL))
+				{
+					let creating = browser.tabs.create({
+						url: currentURL, //Needs to be a full domain
+						cookieStoreId: window.knownContexts[context]
+					});
+				}
+				else
+				{
+					console.log("Url is invalid");
+				}
+			}
+		}
+		, onError);
 }
 function validateURL(textval) {
 	/***********************************************************************
@@ -112,6 +155,7 @@ function validateURL(textval) {
 	Got it from: https://stackoverflow.com/questions/1303872/trying-to-validate-url-using-javascript
 	************************************************************************/
 
-    let urlregex = /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
+    let urlregex =   /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
     return urlregex.test(textval);
 }
+

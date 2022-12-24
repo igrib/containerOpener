@@ -2,8 +2,8 @@
 
   "manifest_version": 2,
   "name": "Container Opener",
-  "version": "1.0",
-  "description": "Opens same site in multiple containers at once",
+  "version": "1.10",
+  "description": "Opens same site in multiple containers at once.",
 	
   "icons": {
      "48": "icons/mushroom.svg"
