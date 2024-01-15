@@ -152,10 +152,14 @@ function validateURL(textval) {
 	/***********************************************************************
 	Called from saveOptions()
 	Checks if it's a valid URL
-	Got it from: https://stackoverflow.com/questions/1303872/trying-to-validate-url-using-javascript
 	************************************************************************/
-
-    let urlregex =   /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
-    return urlregex.test(textval);
+	let url;
+	try { 
+		url = new URL(textval);
+  	} catch (_) {
+      	return false;  
+	}
+	
+	return url.protocol === "http:" || url.protocol === "https:";
 }
 

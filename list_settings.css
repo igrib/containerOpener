@@ -3,10 +3,11 @@ body{
 	font-family:sans-serif;
 	color: #dee0e6;
 	background-color:#134e6f;
-	border: 3px solid #ff6150;
+	border: 3px solid #ff6150;;
 	border-radius: 3px;
 	padding:10px;
 	height:100%;
+	width:max-content;
 }
 
 .siteTable{

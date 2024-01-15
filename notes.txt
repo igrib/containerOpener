@@ -1,3 +1,2 @@
 Zip instructions:
-zip -r containerOpener.zip . -x "*.DS_Store*" -x notes.txt -x "*.git*"
-
+zip -r containerOpener.zip . -x "*.DS_Store*" notes.txt "*.git*" TODO.md "archive/*"

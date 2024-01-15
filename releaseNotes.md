@@ -18,3 +18,7 @@
 
 #v1.10
 * Fixed bug with columns being misaligned by one. Thank you Ya Zahra
+
+#v1.11
+* Fixed issue with newer top level domains (TLDs) not being accepted
+* Fixed issue with border rendering in the settings table

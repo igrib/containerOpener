@@ -2,7 +2,7 @@
 
   "manifest_version": 2,
   "name": "Container Opener",
-  "version": "1.10",
+  "version": "1.11",
   "description": "Opens same site in multiple containers at once.",
 	
   "icons": {

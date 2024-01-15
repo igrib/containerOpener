@@ -484,7 +484,6 @@ function validateURL(textval) {
 	/***********************************************************************
 	Called from saveOptions()
 	Checks if it's a valid URL
-	Got it from: https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url 
 	/**********************************************************************/
 
 	let url;
